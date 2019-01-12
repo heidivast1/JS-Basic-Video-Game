@@ -16,12 +16,30 @@ var winningScore = 100;
 function addItems() {
   items = game.add.physicsGroup();
   createItem(375, 300, 'coin');
+  createItem(575, 500, 'coin');
+  createItem(275, 600, 'coin');
+  createItem(202, 700, 'coin');
+  createItem(405, 300, 'coin');
+  createItem(129, 112, 'coin');
+  createItem(500, 200, 'coin');
+  createItem(350, 350, 'coin');
+  createItem(475, 402, 'poison');
+  createItem(370, 500, 'poison');
+  createItem(125, 50, 'star');
 }
 
 // add platforms to the game
 function addPlatforms() {
   platforms = game.add.physicsGroup();
   platforms.create(450, 550, 'platform');
+  platforms.create(100, 550, 'platform');
+  platforms.create(400, 550, 'platform');
+  platforms.create(220, 120, 'platform');
+  platforms.create(100, 360, 'platform2');
+  platforms.create(500, 90, 'platform');
+  platforms.create(300, 220, 'platform');
+  platforms.create(500, 50, 'platform');
+  platforms.create(30, 550, 'platform2');
   platforms.setAll('body.immovable', true);
 }
 
@@ -43,7 +61,13 @@ function createBadge() {
 // when the player collects an item on the screen
 function itemHandler(player, item) {
   item.kill();
-  currentScore = currentScore + 10;
+  if (item.key === 'coin') {
+    currentScore = currentScore + 10;
+  } else if (item.key === 'star') {
+    currentScore = currentScore + 15;
+  } else if (item.key === 'poison') {
+    currentScore = currentScore - 5;
+  }
   if (currentScore === winningScore) {
       createBadge();
   }
@@ -58,18 +82,21 @@ function badgeHandler(player, badge) {
 // setup game when the web page loads
 window.onload = function () {
   game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
-  
+
   // before the game begins
   function preload() {
     game.stage.backgroundColor = '#5db1ad';
-    
+
     //Load images
     game.load.image('platform', 'platform_1.png');
-    
+    game.load.image('platform2', 'platform_2.png');
+
     //Load spritesheets
     game.load.spritesheet('player', 'chalkers.png', 48, 62);
     game.load.spritesheet('coin', 'coin.png', 36, 44);
     game.load.spritesheet('badge', 'badge.png', 42, 54);
+    game.load.spritesheet('poison', 'poison.png', 32, 32);
+    game.load.spritesheet('star', 'star.png', 32, 32);
   }
 
   // initial game set up
@@ -115,7 +142,7 @@ window.onload = function () {
     else {
       player.animations.stop();
     }
-    
+
     if (jumpButton.isDown && (player.body.onFloor() || player.body.touching.down)) {
       player.body.velocity.y = -400;
     }
